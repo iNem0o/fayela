@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 use Fayela\Fayela;
 use Fayela\Helper\HTMLGeneratorHelper;
@@ -73,7 +73,7 @@ try {
                     ' '
                 );
             }
-            ?>
+    ?>
         </div>
     </div>
     <div class="fayela--header--breadcrumb">
@@ -112,12 +112,12 @@ try {
         foreach ($currentItemChildren as $item) {
             echo $htmlGenerator->generateFilelistRow($item, $app->getDirectoryPersonalization($item['path']));
         }
-        ?>
+    ?>
     </div>
 
 
     <?= $htmlGenerator->generateRecentFilesColumns(
-        array_filter($currentItemChildren, static fn($item) => true === $item['isDir'])
+        array_filter($currentItemChildren, static fn ($item) => true === $item['isDir'])
     ) ?>
 
     <script type="text/javascript">

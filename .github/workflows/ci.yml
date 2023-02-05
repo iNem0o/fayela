@@ -1,13 +1,11 @@
 name: ci
 
-on:
-  push:
-    branches:
-      - "main"
+on: [ push, pull_request ]
 
 jobs:
-  docker:
-    runs-on: ubuntu-latest
+  docker-build:
+    name: docker-build
+    runs-on: ubuntu-20.04
     steps:
       -
         name: Checkout
@@ -19,24 +17,31 @@ jobs:
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
       -
-        name: Login to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-      -
-        name: Login to GitHub Container Registry
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      -
         name: Build and push
         uses: docker/build-push-action@v4
         with:
           context: .
           platforms: linux/amd64,linux/arm64
-          push: true
-          tags: |
-            inem0o/fayela:latest
+          push: false
+          tags: test-build
+  php-build:
+    name: php-build
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+      - name: Install dependencies
+        working-directory: ./app
+        run: composer install
+      - name: EasyCodingStandard
+        working-directory: ./app
+        run: ./vendor/bin/ecs
+      - name: PHPStan
+        working-directory: ./app
+        run: ./vendor/bin/phpstan analyse -c phpstan.neon public src tests
+      - name: PHPUnit
+        working-directory: ./app
+        run: ./vendor/bin/phpunit tests

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Fayela\Filesystem;
 
@@ -251,11 +251,6 @@ class FilelistFactory
      * Create a public path using a base $publicEndpoint and SpliFileInfo instance pointing to a file or a directory
      *
      * $fileInfo could be provided as a path to a file or a directory
-     *
-     * @param string $publicEndpoint
-     * @param SplFileInfo|string $fileInfo
-     *
-     * @return string
      */
     protected function createPublicPath(string $publicEndpoint, SplFileInfo|string $fileInfo): string
     {
@@ -279,7 +274,7 @@ class FilelistFactory
      */
     protected function getLastCreatedFiles(array $filesCTimes, int $maxLastCreatedFiles = 10): array
     {
-        usort($filesCTimes, static fn($a, $b) => $b['timestamp_create'] <=> $a['timestamp_create']);
+        usort($filesCTimes, static fn ($a, $b) => $b['timestamp_create'] <=> $a['timestamp_create']);
         if (count($filesCTimes) > $maxLastCreatedFiles) {
             $filesCTimes = array_slice($filesCTimes, 0, $maxLastCreatedFiles);
         }

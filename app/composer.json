@@ -31,7 +31,7 @@
   },
   "scripts": {
     "phpstan": "phpstan analyse -c phpstan.neon public src tests",
-    "ecs": "ecs --fix",
+    "ecs": "ecs",
     "phpunit": "phpunit tests",
     "auto-scripts": {
     },

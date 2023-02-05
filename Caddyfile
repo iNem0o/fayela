@@ -1,0 +1,35 @@
+{
+        supervisor {
+                php-fpm --nodaemonize {
+                        dir /srv/app
+                        restart_policy always
+                }
+        }
+}
+
+http://:8080 {
+        encode gzip
+
+        root * /srv/app/public
+
+        # forward fpm status request to the specific status pool
+        php_fastcgi /fpm-status 127.0.0.1:9002 {
+                env SCRIPT_NAME /fpm-status
+        }
+
+        # mapping to forward files requests to the dedicated fpm pool
+        @staticfiles {
+                path_regexp staticfiles \.([a-z]+)$
+        }
+        php_fastcgi @staticfiles 127.0.0.1:9001 {
+                try_files index.php
+        }
+
+        # default php-fpm
+        php_fastcgi /api* 127.0.0.1:9000 {
+                try_files api.php
+        }
+        php_fastcgi 127.0.0.1:9000 {
+                try_files index.php
+        }
+}

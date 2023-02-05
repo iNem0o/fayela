@@ -1,0 +1,128 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use Fayela\Fayela;
+use Fayela\Filesystem\FilelistFactory;
+use Fayela\Helper\HumanReadableConverter;
+
+if ('cli' !== PHP_SAPI) {
+    exit;
+}
+
+
+readonly class ConsoleHelper
+{
+    public function __construct(
+        protected mixed $output
+    ) {
+        assert(
+            is_resource($output) && get_resource_type($output) === 'stream',
+            new InvalidArgumentException('ConsoleHelper :: invalid $output resource')
+        );
+    }
+
+    public function error(string $lineText): void
+    {
+        $this->writeLine('error', $lineText);
+    }
+
+    public function success(string $lineText): void
+    {
+        $this->writeLine('success', $lineText);
+    }
+
+    public function warning(string $lineText): void
+    {
+        $this->writeLine('warning', $lineText);
+    }
+
+    public function info(string $lineText): void
+    {
+        $this->writeLine('info', $lineText);
+    }
+
+    public function writeLine(string $type, string $lineText): void
+    {
+        fwrite(
+            $this->output,
+            sprintf(
+                "\033[%s[%s][%s] %s \033[0m\n",
+                match ($type) {
+                    'error' => '31m',
+                    'success' => '32m',
+                    'warning' => '33m',
+                    'info' => '36m',
+                    default => '0m'
+                },
+                date('Y-m-d H:i:s'),
+                match ($type) {
+                    'error' => 'ERROR',
+                    'success' => 'SUCCESS',
+                    'warning' => 'WARNING',
+                    'info' => 'INFO',
+                    default => 'UNKNOWN'
+                },
+                $lineText
+            )
+        );
+    }
+}
+
+
+try {
+    /** @var Fayela $app */
+    $app = require __DIR__ . '/bootstrap.php';
+
+    $io = new ConsoleHelper(fopen("php://stdout", "wb"));
+
+    switch ($argv[1] ?? '') {
+        case 'database:update':
+
+            $humanReadableConverter = new HumanReadableConverter();
+            $filelistFactory = new FilelistFactory($humanReadableConverter);
+            $filelistFactory->setStartDirectory($app->getConfigString('data_directory'));
+            $filelistFactory->setStartPublicEndpoint($app->getConfigString('public_endpoint'));
+            $filelistFactory->scan($app->getConfigString('json_database_storage_path'), static function ($path) use ($io) {
+                $io->info(sprintf('scanning %s', $path));
+            });
+
+            $io->success('database updated!');
+            break;
+        case 'help':
+        default:
+            echo <<<MANUAL
+
+
+\033[36m|::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::|\033[0m
+\033[36m|::\033[31m                 ('-.                     ('-.                 ('-.       \033[36m::|  
+\033[36m|::\033[31m                ( OO ).-.               _(  OO)               ( OO ).-.   \033[36m::|  
+\033[36m|::\033[0m     ,------.   \033[31m/\033[0m . --. \033[31m/\033[0m   ,--.   ,--.\033[31m(\033[0m,------.  ,--.        \033[31m/ \033[0m. --. \033[31m/   \033[36m::|  
+\033[36m|::\033[31m  ('-\033[0m| _.---'   \033[31m| \\\033[0m-.  \     \  `.'  /  |  .---'  |  |\033[31m.-')    \033[31m| \\\033[0m-.  \    \033[36m::|  
+\033[36m|::\033[31m  (OO\033[0m|\033[31m(_\\\033[0m     \033[31m.-\033[0m' '  |  |  \033[31m.-')\033[0m     /   |  |      |  |\033[31m OO ) \033[31m.-\033[0m' '  |  |   \033[36m::|  
+\033[36m|::\033[31m  /  \033[0m|  '--.   \033[31m\\\033[0m| |_.'  | \033[31m(OO\033[0m  \   /   \033[31m(\033[0m|  '--.   |  |\033[31m`-' |  \033[31m\\\033[0m| |_.'  |   \033[36m::|  
+\033[36m|::\033[31m  \_)\033[0m|  .--'    |  .-.  |  \033[31m|\033[0m   /  /\033[31m\_\033[0m   |  .--'  \033[31m(\033[0m|  '---.\033[31m'\033[0m   |  .-.  |   \033[36m::|
+\033[36m|::\033[31m    \\\033[0m|  |\033[31m_)\033[0m     |  | |  |  \033[31m`-.\033[0m/  /\033[31m.__)\033[0m  |  `---.  |      |    |  | |  |   \033[36m::|  
+\033[36m|::\033[0m     `--'       `--' `--'    `--'       `------'  `------'    `--' `--'   \033[36m::|       
+\033[36m|::\033[0m                                                                v0.1      \033[36m::|   
+\033[36m|::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::|
+\033[36m|::\033[0m                                                                          \033[36m::| 
+\033[36m|::\033[0m    Commands :                                                            \033[36m::| 
+\033[36m|::\033[0m                                                                          \033[36m::| 
+\033[36m|::\033[0m    ./fayela database:update       scan the data directory and update     \033[36m::| 
+\033[36m|::\033[0m                                   database                               \033[36m::| 
+\033[36m|::\033[0m                                                                          \033[36m::| 
+\033[36m|::\033[0m    ./fayela help                 print this message                      \033[36m::| 
+\033[36m|::\033[0m                                                                          \033[36m::| 
+\033[36m|::\033[0m                                                                          \033[36m::| 
+\033[36m|______________________________________________________________________________|\033[0m
+
+
+MANUAL;
+            break;
+    }
+} catch (Exception $e) {
+    var_dump($e);
+    exit;
+}

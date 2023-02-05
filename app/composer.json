@@ -1,0 +1,45 @@
+{
+  "name": "fayela/fayela",
+  "description": "fayela is a PHP & Caddy powered file server",
+  "type": "project",
+  "autoload": {
+    "psr-4": {
+      "Fayela\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "inem0o"
+    }
+  ],
+  "require": {
+    "ext-bcmath": "*",
+    "ext-curl": "*",
+    "ext-json": "*"
+  },
+  "require-dev": {
+    "symplify/easy-coding-standard": "^11.1",
+    "phpstan/extension-installer": "^1.2",
+    "phpstan/phpstan": "^1.9",
+    "phpstan/phpstan-strict-rules": "^1.4",
+    "phpunit/phpunit": "^10"
+  },
+  "config": {
+    "allow-plugins": {
+      "phpstan/extension-installer": true
+    }
+  },
+  "scripts": {
+    "phpstan": "phpstan analyse -c phpstan.neon public src tests",
+    "ecs": "ecs --fix",
+    "phpunit": "phpunit tests",
+    "auto-scripts": {
+    },
+    "post-install-cmd": [
+      "@auto-scripts"
+    ],
+    "post-update-cmd": [
+      "@auto-scripts"
+    ]
+  }
+}

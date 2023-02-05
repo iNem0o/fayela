@@ -1,0 +1,206 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+html {
+    font-size: 15px;
+}
+
+body {
+    font-family: arial, sans-serif;
+    text-rendering: optimizespeed;
+    padding: 1rem;
+    background: #212529;
+}
+
+.fayela--header--server, .fayela--header--breadcrumb, .fayela--filelist, .fayela--filecolumns--column {
+    padding: 1rem 20px;
+    background-color: #f2f2f2;
+    margin-top: 5px;
+    border-radius: 5px;
+}
+
+.fayela--header--server {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.fayela--header--server--name, .fayela--header--server--name:hover {
+    font-weight: bold;
+    font-family: serif;
+    font-size: 3.5em;
+    color: black;
+}
+
+.fayela--header--server--threads {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.fayela--header--server--threads--thread {
+    padding: 20px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+}
+
+.fayela--header--server--threads--thread--state-idle {
+    background: green;
+}
+
+.fayela--header--server--threads--thread--state-running {
+    background: orange;
+}
+
+.fayela--header--breadcrumb {
+    display: flex;
+    align-items: center;
+}
+
+.fayela--header--breadcrumb--links {
+    width: 85%;
+}
+
+.fayela--header--breadcrumb--folderstats {
+    width: 15%;
+    text-align: right;
+}
+
+
+.fayela--filelist--row--header {
+    background: #d7d7d7;
+    font-size: 1.1rem;
+    align-items: center;
+}
+
+.fayela--filelist--row--header > a, .fayela--filelist--row--header > span {
+    padding: 5px;
+    line-height: 1.5em;
+    font-weight: bold;
+}
+
+.fayela--filelist--row--header svg, .fayela--filelist--row--link svg {
+    fill: black;
+}
+
+a {
+    color: black;
+    text-decoration: none;
+}
+
+a:hover {
+    color: black;
+}
+
+.fayela--filelist--row--header--icon-sort {
+    margin-right: 5px;
+    position: relative;
+    width: 1em;
+    padding-left: 1em;
+}
+
+.fayela--filelist--row--header--icon-sort--top {
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.fayela--filelist--row--header--icon-sort--bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.fayela--filelist {
+    background: #f2f2f2;
+    padding: 20px;
+}
+
+.fayela--filelist--row, .fayela--filelist--row--header {
+    display: grid;
+    grid-template-columns: 10fr 1fr 1fr 1fr;
+    align-items: center;
+    justify-content: right;
+    text-align: left;
+}
+
+.fayela--filelist--row {
+    background: white;
+    font-size: 1rem;
+    text-decoration: none;
+    border-bottom: 1px dashed #dadada;
+    padding: 5px 0;
+}
+
+.fayela--filelist--row, .fayela--filelist--row:hover {
+    color: black;
+}
+
+.fayela--filelist--row:hover, .fayela--filelist--row:hover .fayela--filelist--row--link--name > span:last-child:not(:first-child) {
+    background-color: #aaa;
+    color: white;
+}
+
+.fayela--filelist--row--link {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+}
+
+.fayela--filelist--row--link--name {
+    display: flex;
+    flex-direction: column;
+}
+
+.fayela--filelist--row--link--name > span:last-child:not(:first-child) {
+    font-size: 0.8em;
+    color: #aaa;
+}
+
+svg {
+    vertical-align: middle;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.fayela--filelist--row--files {
+    display: flex;
+    align-items: end;
+    justify-content: end;
+    text-align: right;
+}
+
+.fayela--filelist--row--size, .fayela--filelist--row--created-at {
+    text-align: center;
+}
+
+
+.fayela--filecolumns {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: start;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.fayela--filecolumns--column {
+    flex-basis: 45%;
+}
+
+.fayela--filecolumns--column .fayela--filelist--row--files {
+    display: none;
+}
+
+.fayela--filecolumns--column .fayela--filelist--row, .fayela--filecolumns--column .fayela--filelist--row--header {
+    grid-template-columns: 6fr 1fr 1fr;
+}
+
+.fayela--filecolumns--column h2 {
+    text-align: center;
+}

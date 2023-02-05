@@ -5,8 +5,14 @@ declare(strict_types = 1);
 use Fayela\Core\Configuration;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @covers \Fayela\Core\Configuration
+ */
 final class ConfigurationTest extends TestCase
 {
+    /**
+     * @covers \Fayela\Core\Configuration::__construct
+     */
     public function testDirectoriesPersonalisationReindexedByPath(): void
     {
         $config = new Configuration([
@@ -36,6 +42,10 @@ final class ConfigurationTest extends TestCase
         );
     }
 
+    /**
+     * @covers \Fayela\Core\Configuration::__construct
+     * @covers \Fayela\Core\Configuration::getDefaultConfiguration
+     */
     public function testDefaultConfiguration(): void
     {
         $config = new Configuration([
@@ -64,6 +74,9 @@ final class ConfigurationTest extends TestCase
         }
     }
 
+    /**
+     * @covers \Fayela\Core\Configuration::__construct
+     */
     public function testMalformedParseEnvVariables(): void
     {
         $vars = [
@@ -77,6 +90,9 @@ final class ConfigurationTest extends TestCase
     }
 
 
+    /**
+     * @covers \Fayela\Core\Configuration::__construct
+     */
     public function testParseEnvVariables(): void
     {
         $vars = [

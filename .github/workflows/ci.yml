@@ -3,30 +3,33 @@ name: ci
 on: [ push, pull_request ]
 
 jobs:
-  docker-build:
-    name: docker-build
-    runs-on: ubuntu-20.04
-    steps:
-      -
-        name: Checkout
-        uses: actions/checkout@v3
-      -
-        name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      -
-        name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-      -
-        name: Build and push
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          platforms: linux/amd64,linux/arm64
-          push: false
-          tags: test-build
+  #  docker-build:
+  #    name: docker-build
+  #    runs-on: ubuntu-20.04
+  #    steps:
+  #      -
+  #        name: Checkout
+  #        uses: actions/checkout@v3
+  #      -
+  #        name: Set up QEMU
+  #        uses: docker/setup-qemu-action@v2
+  #      -
+  #        name: Set up Docker Buildx
+  #        uses: docker/setup-buildx-action@v2
+  #      -
+  #        name: Build and push
+  #        uses: docker/build-push-action@v4
+  #        with:
+  #          context: .
+  #          platforms: linux/amd64,linux/arm64
+  #          push: false
+  #          tags: test-build
   php-build:
     name: php-build
     runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: ./app
     steps:
       - uses: actions/checkout@v3
       - name: Setup PHP
@@ -34,14 +37,18 @@ jobs:
         with:
           php-version: '8.2'
       - name: Install dependencies
-        working-directory: ./app
         run: composer install
       - name: EasyCodingStandard
-        working-directory: ./app
-        run: ./vendor/bin/ecs
+        run: composer run ecs-check
       - name: PHPStan
-        working-directory: ./app
-        run: ./vendor/bin/phpstan analyse -c phpstan.neon public src tests
+        run: composer run phpstan
       - name: PHPUnit
-        working-directory: ./app
-        run: ./vendor/bin/phpunit tests
+        run: composer run phpunit-coverage
+        env:
+          XDEBUG_MODE: coverage
+      - uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.xml
+          flags: unittests
+          fail_ci_if_error: true

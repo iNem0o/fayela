@@ -131,15 +131,47 @@ final class ConfigurationTest extends TestCase
         );
 
         self::assertEquals(
-            [[
-                'test' => true,
-                'test2' => true,
-            ], [
-                'test' => false,
-                'test2' => false,
-            ]],
+            [
+                [
+                    'test' => true,
+                    'test2' => true,
+                ],
+                [
+                    'test' => false,
+                    'test2' => false,
+                ],
+            ],
             $config['nested_array'],
             'FAYELA__NESTED_ARRAY__[0,1]__TEST[1,2]'
+        );
+    }
+
+    /**
+     * @covers \Fayela\Core\Configuration::offsetSet
+     * @covers \Fayela\Core\Configuration::offsetUnset
+     * @covers \Fayela\Core\Configuration::offsetExists
+     */
+    public function testArrayAccess(): void
+    {
+        $vars = [
+            'FAYELA__TEST' => true,
+        ];
+        $config = new Configuration($vars);
+
+        // test if exists
+        self::assertTrue(
+            isset($config['test'])
+        );
+
+        // ask delete, test it still exists
+        unset($config['test']);
+        self::assertTrue(
+            isset($config['test'])
+        );
+
+        $config['test'] = false;
+        self::assertTrue(
+            $config['test']
         );
     }
 }

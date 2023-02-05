@@ -5,8 +5,14 @@ declare(strict_types = 1);
 use Fayela\Core\Configuration;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @covers \Fayela\Core\Configuration
+ */
 final class ConfigurationTest extends TestCase
 {
+    /**
+     * @covers \Fayela\Core\Configuration::__construct
+     */
     public function testDirectoriesPersonalisationReindexedByPath(): void
     {
         $config = new Configuration([
@@ -36,6 +42,10 @@ final class ConfigurationTest extends TestCase
         );
     }
 
+    /**
+     * @covers \Fayela\Core\Configuration::__construct
+     * @covers \Fayela\Core\Configuration::getDefaultConfiguration
+     */
     public function testDefaultConfiguration(): void
     {
         $config = new Configuration([
@@ -64,6 +74,9 @@ final class ConfigurationTest extends TestCase
         }
     }
 
+    /**
+     * @covers \Fayela\Core\Configuration::__construct
+     */
     public function testMalformedParseEnvVariables(): void
     {
         $vars = [
@@ -77,6 +90,9 @@ final class ConfigurationTest extends TestCase
     }
 
 
+    /**
+     * @covers \Fayela\Core\Configuration::__construct
+     */
     public function testParseEnvVariables(): void
     {
         $vars = [
@@ -115,15 +131,47 @@ final class ConfigurationTest extends TestCase
         );
 
         self::assertEquals(
-            [[
-                'test' => true,
-                'test2' => true,
-            ], [
-                'test' => false,
-                'test2' => false,
-            ]],
+            [
+                [
+                    'test' => true,
+                    'test2' => true,
+                ],
+                [
+                    'test' => false,
+                    'test2' => false,
+                ],
+            ],
             $config['nested_array'],
             'FAYELA__NESTED_ARRAY__[0,1]__TEST[1,2]'
+        );
+    }
+
+    /**
+     * @covers \Fayela\Core\Configuration::offsetSet
+     * @covers \Fayela\Core\Configuration::offsetUnset
+     * @covers \Fayela\Core\Configuration::offsetExists
+     */
+    public function testArrayAccess(): void
+    {
+        $vars = [
+            'FAYELA__TEST' => true,
+        ];
+        $config = new Configuration($vars);
+
+        // test if exists
+        self::assertTrue(
+            isset($config['test'])
+        );
+
+        // ask delete, test it still exists
+        unset($config['test']);
+        self::assertTrue(
+            isset($config['test'])
+        );
+
+        $config['test'] = false;
+        self::assertTrue(
+            $config['test']
         );
     }
 }

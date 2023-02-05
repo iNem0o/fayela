@@ -32,7 +32,9 @@
   "scripts": {
     "phpstan": "phpstan analyse -c phpstan.neon public src tests",
     "ecs": "ecs --fix",
+    "ecs-check": "ecs",
     "phpunit": "phpunit tests",
+    "phpunit-coverage": "phpunit --coverage-clover ./coverage.xml tests",
     "auto-scripts": {
     },
     "post-install-cmd": [

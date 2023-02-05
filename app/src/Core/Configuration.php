@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Fayela\Core;
 
@@ -74,7 +74,8 @@ readonly class Configuration implements ArrayAccess
                 // split variable name in parts, remove the first "FAYELA" and lowercase all the parts
                 // FAYELA__PUBLIC_ENDPOINT  ==>  ["PUBLIC_ENDPOINT"]
                 /** @var array<int, string> $parts */
-                $parts = array_map(static fn($string) => mb_strtolower(trim($string)),
+                $parts = array_map(
+                    static fn ($string) => mb_strtolower(trim($string)),
                     array_slice(explode('__', $k), 1)
                 );
                 $lastKey = count($parts) - 1;

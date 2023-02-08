@@ -4,11 +4,16 @@ on:
   push:
     branches:
       - main
+    tags:
+      - '*'
 
 jobs:
   docker-build-and-push:
     runs-on: ubuntu-latest
     steps:
+      -
+        name: Extract tag
+        run: echo "CURRENT_DOCKER_TAG=${GITHUB_REF##*/}" >> $GITHUB_ENV
       -
         name: Checkout
         uses: actions/checkout@v3
@@ -39,5 +44,4 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            inem0o/fayela:latest
-            inem0o/fayela:1.0.0
+            inem0o/fayela:${{ env.CURRENT_DOCKER_TAG }}

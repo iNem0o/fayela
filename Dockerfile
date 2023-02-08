@@ -15,6 +15,11 @@ COPY --link ./Caddyfile /etc/Caddyfile
 
 # phpfpm
 RUN docker-php-ext-install bcmath
+
+# set www-data user/group id
+RUN echo http://dl-2.alpinelinux.org/alpine/edge/community/ >> /etc/apk/repositories \
+    && apk --no-cache add shadow
+
 COPY --link ./fpm-downloader/fpm.conf /usr/local/etc/php-fpm.d/fpm.conf
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer

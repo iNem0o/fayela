@@ -81,6 +81,7 @@ class Fayela
 
         // search for directory database
         $databaseStorageDirectory = rtrim($this->getConfigString('json_database_storage_path'), '/');
+
         $dbFile = $databaseStorageDirectory . '/' . md5($parsedUriPath);
         $isFile = false;
         if (!file_exists($dbFile)) {

@@ -78,12 +78,10 @@ class Fayela
         if (!isset($dirInfo['dirname'])) {
             throw new ServiceUnavailableHttpException('invalid request uri');
         }
-
         // search for directory database
         $databaseStorageDirectory = rtrim($this->getConfigString('json_database_storage_path'), '/');
 
-        $dbFile = $databaseStorageDirectory . '/' . md5($parsedUriPath);
-
+        $dbFile = $databaseStorageDirectory . '/' . md5(urldecode($parsedUriPath));
         $isFile = false;
         if (!file_exists($dbFile)) {
             // no database found for directory, maybe we are on a file ?

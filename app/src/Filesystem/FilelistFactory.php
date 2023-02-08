@@ -191,11 +191,15 @@ class FilelistFactory
             }
 
             $shortPath = ltrim(str_replace($this->getStartDirectory(), '', $object->getRealPath()), '/');
+            $shortPublicPath = $shortPath;
             if ('' === $shortPath) {
                 $shortPath = '/';
+                $shortPublicPath = '';
+            } else {
+                $shortPublicPath = urlencode($shortPath);
             }
 
-            $publicPath = $this->startPublicEndpoint . '/' . $shortPath;
+            $publicPath = $this->startPublicEndpoint . '/' . $shortPublicPath;
 
             $directoriesJson = json_encode(
                 $this->scanDirectory($object->getRealPath(), $shortPath, $publicPath),

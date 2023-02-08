@@ -202,7 +202,10 @@ class FilelistFactory
                 JSON_THROW_ON_ERROR
             );
 
-            file_put_contents($storagePath . '/' . md5('/' . $shortPath), $directoriesJson, LOCK_EX);
+            if ('/' !== $shortPath) {
+                $shortPath = '/' . $shortPath;
+            }
+            file_put_contents($storagePath . '/' . md5($shortPath), $directoriesJson, LOCK_EX);
             if (is_callable($onProgress)) {
                 $onProgress($shortPath);
             }

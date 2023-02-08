@@ -35,7 +35,7 @@ class DownloadBinaryFileResponse
 
             header('HTTP/1.1 206 Partial Content');
             header(sprintf('Content-Range: bytes %s-%s/%s', $seekStart, $seekEnd, $filesize));
-        } else {
+        } elseif (mb_strlen($this->currentHttpRangeHeader) > 0) {
             header('HTTP/1.1 404 Not found');
         }
         header(sprintf('Content-Length: %s', $filesize));

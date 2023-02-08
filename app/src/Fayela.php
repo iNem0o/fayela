@@ -83,6 +83,7 @@ class Fayela
         $databaseStorageDirectory = rtrim($this->getConfigString('json_database_storage_path'), '/');
 
         $dbFile = $databaseStorageDirectory . '/' . md5($parsedUriPath);
+
         $isFile = false;
         if (!file_exists($dbFile)) {
             // no database found for directory, maybe we are on a file ?

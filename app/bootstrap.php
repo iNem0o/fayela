@@ -16,5 +16,5 @@ function dd(): never
 
 return new Fayela(
     new Configuration(array_filter($_SERVER, static fn(string $key) => str_starts_with($key, 'FAYELA_'), ARRAY_FILTER_USE_KEY)),
-    ($_SERVER['FAYELA__PUBLIC_ENDPOINT'] ?? '') . '/fpm-status'
+    'http://localhost:8080/fpm-status'
 );

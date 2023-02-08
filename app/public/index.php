@@ -24,11 +24,11 @@ try {
     }
 
     $currentFile = $app->getCurrentFile();
+
     if (null !== $currentFile) {
         if (!file_exists($currentFile['path']) || !is_readable($currentFile['path'])) {
             throw new NotFoundHttpException();
         }
-
         $response = new DownloadBinaryFileResponse(
             $currentFile['path'],
             $currentFile['name'],
